@@ -15,7 +15,7 @@
 
         <button x-on:click="edit = !edit">Edit story</button>
         <button x-on:click="index = 0" style="float: right;">Go to the beginning</button>
-        <textarea x-model="$store.settings.t" id="editor" placeholder="Paste your HTML here" x-show="edit"
+        <textarea x-model="$store.settings.t" id="editor" x-show="edit"
             style="height: 28%; min-height: 20rem; display: flex; flex-direction: column; white-space: pre; overflow-wrap: normal; overflow-x: scroll;"></textarea>
         <button x-show="edit" x-on:click="$store.settings.t = randomWalk(30); index = 0">Random walk</button>
 
