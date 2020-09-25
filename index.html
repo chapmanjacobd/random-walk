@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walk</title>
+    <link rel="stylesheet" type="text/css" href="https://unli.xyz/awsm_theme_pearl-lusta.css" media="all">
+    <script src="https://cdn.jsdelivr.net/gh/ryangjchandler/spruce@1.1.1/dist/spruce.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js"></script>
+</head>
+
+<body>
+    <div x-data="{index: 0, edit: false}" x-subscribe style="" x-init="$store.settings.t = randomWalk(30)">
+
+        <button x-on:click="edit = !edit">Edit story</button>
+        <button x-on:click="index = 0" style="float: right;">Go to the beginning</button>
+        <textarea x-model="$store.settings.t" id="editor" placeholder="Paste your HTML here" x-show="edit"
+            style="height: 28%; min-height: 20rem; display: flex; flex-direction: column; white-space: pre; overflow-wrap: normal; overflow-x: scroll;"></textarea>
+        <button x-show="edit" x-on:click="$store.settings.t = randomWalk(30)">Random walk</button>
+
+        <div x-on:click="if ($store.settings.t.split('\n').length > index) index++"
+            x-html="$store.settings.t.split('\n').length > index ? $store.settings.t.split('\n')[index] : 'End of the story'"
+            style="margin:auto; height: 85vh;display: grid;place-items: center;">
+        </div>
+
+        <button x-on:click="if (index > 0) index--">Go back</button>
+        <button x-on:click="if ($store.settings.t.split('\n').length > index) index++"
+            style="float: right;">Next</button>
+
+    </div>
+
+
+
+
+    <script>
+
+        const buildings = ['abattoir', 'abbey', 'aerodrome runway', 'airport terminal', 'amusement park', 'pyramid', 'watermill', 'apartment', 'aquaria', 'aqueduct', 'archaeological site', 'arena', 'assembly', 'aul', 'barn', 'barracks', 'basilica', 'bathhouse', 'biomass-fuelled power plant', 'blockhouse', 'boathouse', 'bowling alley', 'breakwater', 'bridge', 'buddhist temple', 'bulk warehouse', 'bunker', 'bus station', 'call center', 'campus center', 'canal', 'car wash', 'caravanserai', 'casino', 'castle', 'cathedral', 'chapel', 'chicken coop', 'chickenhouse', 'choultry', 'church', 'citadel', 'citizen center', 'city hall', 'clubhouse', 'cold storage', 'community hall', 'composting facility', 'concert hall', 'consulate', 'container terminal', 'converter hall', 'courthouse', 'cow-shed', 'crib', 'cruise terminal', 'dam', 'data center', 'desalination plant', 'dike watch house', 'fulfillment center', 'dome', 'duomo', 'duplex house', 'egyptian pyramid', 'embassy', 'entertainment venue', 'farmhouse', 'ferry terminal', 'film studio', 'fire station', 'fort', 'fortification', 'funeral home', 'furnace', 'garage', 'geothermal power plant', 'golf course', 'granary', 'greenhouse', 'gurdwara', 'gym', 'hangar', 'harbour work', 'hayloft', 'high-rise flat', 'highway', 'hindu temple', 'historic house', 'hospital', 'hovercraft', 'indoor arena', 'jazz club', 'jetty', 'laboratory', 'lake', 'leisure centre', 'library', 'lighthouse', 'major league baseball stadium', 'marina', 'martyrium', 'meeting house', 'metro station', 'mine site', 'missile launch facility', 'monastery', 'moot hall', 'mosque', 'multi-level car parking', 'museum', 'nuclear power plant', 'nuclear reactor', 'observatory', 'office building', 'oil refinery', 'opera house', 'pagoda', 'palace', 'parking lot', 'pigpen', 'pipeline', 'police station', 'poorhouse', 'post office', 'power distribution', 'power generation', 'prison', 'public bath', 'railway', 'railroad station', 'renewable energy station', 'reservoir', 'resort', 'root cellar', 'self-storage', 'semi-detached house', 'service centre', 'sewage treatment plant', 'shed', 'shipyard', 'showroom', 'shrine', 'signal box', 'silo', 'slaughterhouse', 'sluice', 'slum', 'space port', 'sports field', 'stable', 'stadium', 'storm cellar', 'substation building', 'synagogue', 'radio transmission tower', 'temple', 'theater', 'theatre', 'tower', 'transmitter building', 'truck terminal', 'tunnel', 'wall', 'warehouse', 'waste transfer centre', 'water tank', 'waterworks', 'well house', 'wholesale establishment', 'windmill', 'zoo']
+
+        function randomTitle() {
+            return 'a trip to the ' + buildings[Math.floor(Math.random() * buildings.length)]
+        }
+
+        function rollDice(max) {
+            return 1 + Math.floor(Math.random() * max)
+        }
+
+        function randomDirection() {
+            const roll = rollDice(4)
+            if (roll == 1) return 'face north'
+            if (roll == 2) return 'face east'
+            if (roll == 3) return 'face south'
+            if (roll == 4) return 'face west'
+        }
+
+        function randomWalkItem(length) {
+            if (Math.random() > 0.5) {
+                if (Math.random() > 0.6)
+                    return 'turn right'
+                return 'turn left'
+            }
+            return `walk for ${randomTime(10, 5 * 60)}`
+        }
+
+
+        function randomTime(min, max) {
+            const seconds = Math.floor(Math.random() * (max - min + 1)) + min
+            if (seconds < 60) return `${seconds} seconds`
+            return `${(seconds / 60).toFixed(0)} minutes`
+        }
+
+        function randomWalk(length) {
+            const rawSteps = Array.from({ length }).map(randomWalkItem).filter(Boolean)
+            const steps = rawSteps.filter((i, idx) => {
+                if (idx == 0) return true
+                return rawSteps[idx - 1].split(' ')[0] != i.split(' ')[0]
+            })
+
+            return [
+                randomTitle(),
+                randomDirection(),
+                ...steps,
+                'finished walking!'
+            ].join('\n')
+        }
+
+
+        const setQueryStringParameter = (name, value) => {
+            const params = new URLSearchParams(window.location.search)
+            params.set(name, value)
+
+            const url = decodeURIComponent(`${window.location.pathname}?${params}`)
+            window.history.replaceState({}, '', url)
+
+            return url
+        }
+
+        let defaultSettings = {
+            t: `walk to the water fountain
+            face north
+            walk for 10 seconds
+            turn right
+            walk for 50 seconds
+            finished walking!
+            ` }
+
+        Spruce.store('settings', {})
+
+
+
+
+
+        // get settings
+        if (typeof gotSettingsFromURL === 'undefined') {
+            window.gotSettingsFromURL = true;
+
+            var urlParams = new URLSearchParams(window.location.search)
+
+            let settingsFromURL = {}
+            Object.keys(defaultSettings).forEach((key, index) => {
+                if (urlParams.has(key)) {
+                    var settingsParam = JSON.parse(urlParams.get(key))
+
+                    if (settingsParam != null) {
+                        Object.assign(settingsFromURL, { [key]: settingsParam })
+                    }
+
+                } else {
+                    Object.assign(settingsFromURL, { [key]: defaultSettings[key] })
+                }
+            })
+            Spruce.reset('settings', settingsFromURL)
+        }
+
+
+
+
+
+        // save settings
+        Object.keys(defaultSettings).forEach((key, index) => {
+            Spruce.watch(`settings.${key}`, (next) => {
+                setQueryStringParameter(key, encodeURIComponent(JSON.stringify(next)))
+            })
+        })
+
+
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>
