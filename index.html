@@ -21,7 +21,7 @@
 
         <div x-on:click="if ($store.settings.t.split('\n').length > index) index++"
             x-html="$store.settings.t.split('\n').length > index ? $store.settings.t.split('\n')[index] : 'End of the story'"
-            style="margin:auto; height: 85vh;display: grid;place-items: center;">
+            style="margin:auto; height: 85vh;display: grid;place-items: center; font-weight: 600; font-size: xx-large;">
         </div>
 
         <button x-on:click="if (index > 0) index--">Go back</button>
