@@ -4,152 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Walk</title>
+    <title>geodesy proliferation</title>
     <link rel="stylesheet" type="text/css" href="https://unli.xyz/awsm_theme_pearl-lusta.css" media="all">
     <script src="https://cdn.jsdelivr.net/gh/ryangjchandler/spruce@1.1.1/dist/spruce.umd.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js"></script>
 </head>
 
 <body>
-    <div x-data="{index: 0, edit: false}" x-subscribe style="" x-init="$store.settings.t = randomWalk(30)">
+    <div x-data="{}" x-subscribe style="" x-init="$store.settings.t = randomWalk()">
 
-        <button x-on:click="edit = !edit">Edit story</button>
-        <button x-on:click="index = 0" style="float: right;">Go to the beginning</button>
-        <textarea x-model="$store.settings.t" id="editor" x-show="edit"
-            style="height: 28%; min-height: 20rem; display: flex; flex-direction: column; white-space: pre; overflow-wrap: normal; overflow-x: scroll;"></textarea>
-        <button x-show="edit" x-on:click="$store.settings.t = randomWalk(30); index = 0">Random walk</button>
-
-        <div x-on:click="if ($store.settings.t.split('\n').length > index) index++"
-            x-html="$store.settings.t.split('\n').length > index ? $store.settings.t.split('\n')[index] : 'End of the story'"
+        <div x-html="$store.settings.t.split('\n').join('<br>')"
             style="margin:auto; height: 85vh;display: grid;place-items: center; font-weight: 600; font-size: xx-large;">
         </div>
 
-        <button x-on:click="if (index > 0) index--">Go back</button>
-        <button x-on:click="if ($store.settings.t.split('\n').length > index) index++"
-            style="float: right;">Next</button>
-
+        <button x-on:click="$store.settings.t = randomWalk(); index = 0">Randomize me capt'n</button>
     </div>
-
-
 
 
     <script>
 
-        const buildings = ['abattoir', 'abbey', 'aerodrome runway', 'airport terminal', 'amusement park', 'pyramid', 'watermill', 'apartment', 'aquaria', 'aqueduct', 'archaeological site', 'arena', 'assembly', 'aul', 'barn', 'barracks', 'basilica', 'bathhouse', 'biomass-fuelled power plant', 'blockhouse', 'boathouse', 'bowling alley', 'breakwater', 'bridge', 'buddhist temple', 'bulk warehouse', 'bunker', 'bus station', 'call center', 'campus center', 'canal', 'car wash', 'caravanserai', 'casino', 'castle', 'cathedral', 'chapel', 'chicken coop', 'chickenhouse', 'choultry', 'church', 'citadel', 'citizen center', 'city hall', 'clubhouse', 'cold storage', 'community hall', 'composting facility', 'concert hall', 'consulate', 'container terminal', 'converter hall', 'courthouse', 'cow-shed', 'crib', 'cruise terminal', 'dam', 'data center', 'desalination plant', 'dike watch house', 'fulfillment center', 'dome', 'duomo', 'duplex house', 'egyptian pyramid', 'embassy', 'entertainment venue', 'farmhouse', 'ferry terminal', 'film studio', 'fire station', 'fort', 'fortification', 'funeral home', 'furnace', 'garage', 'geothermal power plant', 'golf course', 'granary', 'greenhouse', 'gurdwara', 'gym', 'hangar', 'harbour work', 'hayloft', 'high-rise flat', 'highway', 'hindu temple', 'historic house', 'hospital', 'hovercraft', 'indoor arena', 'jazz club', 'jetty', 'laboratory', 'lake', 'leisure centre', 'library', 'lighthouse', 'major league baseball stadium', 'marina', 'martyrium', 'meeting house', 'metro station', 'mine site', 'missile launch facility', 'monastery', 'moot hall', 'mosque', 'multi-level car parking', 'museum', 'nuclear power plant', 'nuclear reactor', 'observatory', 'office building', 'oil refinery', 'opera house', 'pagoda', 'palace', 'parking lot', 'pigpen', 'pipeline', 'police station', 'poorhouse', 'post office', 'power distribution', 'power generation', 'prison', 'public bath', 'railway', 'railroad station', 'renewable energy station', 'reservoir', 'resort', 'root cellar', 'self-storage', 'semi-detached house', 'service centre', 'sewage treatment plant', 'shed', 'shipyard', 'showroom', 'shrine', 'signal box', 'silo', 'slaughterhouse', 'sluice', 'slum', 'space port', 'sports field', 'stable', 'stadium', 'storm cellar', 'substation building', 'synagogue', 'radio transmission tower', 'temple', 'theater', 'theatre', 'tower', 'transmitter building', 'truck terminal', 'tunnel', 'wall', 'warehouse', 'waste transfer centre', 'water tank', 'waterworks', 'well house', 'wholesale establishment', 'windmill', 'zoo']
+        const d = ['yo mamma', "law", "air", "sea", "gis", "bio", "oud", "war", "gay", "art", "toy", "sex", "pro", "geo", "zoo", "set", "lie", "gas", "ray", "tax", "the", "new", "big", "tao", "non", "age", "pan", "web", "hip", "hop", "men", "pre", "era", "old", "diet", "hoax", "land", "goal", "film", "comm", "harp", "time", "arts", "race", "book", "food", "foot", "oral", "vlsi", "head", "cell", "body", "meta", "agro", "meso", "sono", "para", "soil", "risk", "work", "list", "tele", "type", "ring", "game", "inca", "life", "pain", "sign", "pure", "flow", "data", "port", "city", "fire", "mind", "mass", "tort", "drug", "zeal", "cold", "fine", "slow", "arms", "free", "will", "stem", "five", "word", "kuan", "near", "east", "live", "role", "mock", "high", "real", "ages", "area", "pest", "care", "jazz", "pali", "thai", "arab", "deaf", "neck", "file", "heat", "star", "grid", "desk", "wide", "post", "adic", "maya", "loan", "wave", "folk", "indo", "user", "west", "hard", "soft", "gene", "wind", "late", "legal", "music", "radio", "dance", "usage", "piano", "craft", "logic", "latin", "space", "ranks", "staff", "naval", "cover", "siege", "armor", "cyber", "theft", "desig", "paper", "fiber", "brass", "media", "sects", "urban", "other", "power", "metal", "civil", "sound", "peace", "organ", "sales", "south", "greek", "islam", "rehab", "ethno", "neuro", "astro", "econo", "petro", "sagri", "macro", "micro", "cosmo", "femto", "histo", "photo", "phyto", "human", "socio", "paleo", "aging", "sport", "trade", "china", "model", "group", "field", "topos", "chaos", "graph", "value", "queer", "labor", "cuban", "mayan", "aztec", "asian", "dutch", "world", "laser", "solar", "earth", "solid", "moral", "sleep", "comet", "hindu", "fetal", "green", "fluid", "rural", "black", "waste", "ocean", "tools", "small", "elder", "canon", "total", "proxy", "glass", "genre", "audio", "death", "cycle", "gamma", "early", "holes", "modal", "fuzzy", "vedic", "study", "mixed", "koine", "great", "video", "games", "stage", "third", "faith", "block", "roman", "state", "white", "men's", "child", "māori", "plant", "egypt", "stone", "ankle", "theor", "isles", "north", "large", "chain", "taste", "foods", "rings", "cloud", "taoic", "links", "aided", "image", "print", "welsh", "irish", "hindi", "tamil", "based", "radar", "joint", "first", "multi", "cross", "young", "adult", "fault", "order", "indus", "river", "theory", "poetry", "histor", "acting", "syntax", "shinto", "oomoto", "occult", "theism", "flavor", "sexism", "civics", "oology", "optics", "modern", "aerial", "battle", "charge", "morale", "combat", "travel", "ethics", "taoism", "botany", "design", "energy", "fluids", "health", "guitar", "policy", "ritual", "atomic", "gender", "mining", "plasma", "indian", "ethnic", "family", "speech", "marine", "french", "gaming", "lasers", "latina", "daoism", "sports", "social", "sexual", "church", "psycho", "biogeo", "unions", "immuno", "thermo", "palaeo", "autism", "israel", "number", "string", "coding", "public", "korean", "german", "polish", "balkan", "danish", "expert", "jewish", "linear", "formal", "affine", "convex", "finite", "galois", "proper", "muslim", "arabic", "growth", "visual", "matrix", "higher", "museum", "cement", "slavic", "school", "mobile", "safety", "neural", "tissue", "cyborg", "action", "animal", "living", "things", "system", "common", "crimes", "studio", "poland", "choice", "spoken", "arcade", "series", "estate", "cosmic", "sacred", "baha'i", "rights", "empire", "virtue", "change", "sample", "survey", "fiscal", "mental", "supply", "basque", "celtic", "mormon", "market", "remote", "police", "portal", "dental", "trauma", "attack", "trench", "forces", "latino", "future", "cancer", "united", "states", "origin", "sector", "flight", "object", "hebrew", "skills", "strike", "vision", "affect", "fields", "errors", "covert", "galaxy", "immune", "signal", "choral", "damage", "gaelic", "matter", "shuman", "dating", "valued", "broker", "reform", "genome", "casino", "fourth", "middle", "medium", "agency", "awards", "vector", "native", "person", "second", "bronze", "impact", "bodies", "valley", "yellow", "courts", "trusts", "history", "physics", "systems", "algebra", "fiction", "kinship", "grammar", "marxism", "jainism", "cooking", "cuisine", "gourmet", "poetics", "singing", "forgery", "geodesy", "biology", "anatomy", "zootomy", "statics", "enology", "liturgy", "bionics", "ecology", "housing", "curator", "indexer", "library", "nursing", "surgery", "therapy", "urology", "ancient", "tactics", "cavalry", "foxhole", "nuclear", "warrior", "theatre", "sikhism", "drawing", "geology", "finance", "fashion", "atheism", "worship", "control", "society", "tourism", "strings", "devices", "illness", "textile", "schools", "aramaic", "lesbian", "reading", "estates", "banking", "polymer", "russian", "science", "spanish", "chicana", "zoology", "theater", "judaism", "allergy", "cardiac", "plastic", "applied", "infosec", "electro", "archaeo", "mechano", "coastal", "culture", "leisure", "markets", "disease", "measure", "ergodic", "lattice", "african", "women's", "mexican", "chinese", "turkish", "iranian", "british", "italian", "swedish", "finnish", "digital", "medical", "mineral", "quantum", "surface", "thermal", "complex", "weapons", "optical", "english", "studies", "natural", "fractal", "methods", "general", "baptist", "yiddish", "islamic", "marxian", "welfare", "marxist", "amateur", "stellar", "orbital", "outdoor", "special", "organic", "project", "traffic", "records", "reverse", "dynamic", "process", "highway", "ceramic", "vehicle", "vaccine", "federal", "limited", "foreign", "baroque", "analysi", "pairing", "graphic", "storage", "primary", "transit", "jewelry", "weaving", "chamber", "warfare", "writing", "deontic", "defense", "service", "america", "fitness", "eastern", "liberal", "economy", "sensing", "capital", "counter", "incomes", "savings", "product", "related", "hygiene", "western", "musical", "pacific", "quality", "problem", "solving", "gravity", "compact", "objects", "network", "binding", "endemic", "utopian", "chicano", "women’s", "colloid", "futures", "imaging", "islands", "origins", "hacking", "isotope", "program", "machine", "fourier", "mastery", "justice", "climate", "trainer", "logical", "thought", "robotic", "bengali", "persian", "serbian", "dispute", "egerman", "optimal", "textual", "affairs", "yangtze", "desktop", "central", "options", "support", "private", "element", "popular", "centric", "company", "country", "through", "partial", "outside", "college", "language", "geometry", "medicine", "theology", "business", "sciences", "research", "robotics", "painting", "classics", "religion", "rhetoric", "chemical", "computer", "folklore", "ontology", "caodaism", "tenrikyo", "appetite", "delicacy", "puppetry", "feminism", "feminity", "intersex", "misandry", "misogyny", "sexology", "strategy", "activism", "taxonomy", "mycology", "virology", "apiology", "cetology", "ethology", "oenology", "gemology", "pedology", "dynamics", "kinetics", "database", "analysis", "agronomy", "agrology", "pomology", "divinity", "textiles", "aerobics", "batoning", "magazine", "cleaning", "oncology", "pharmacy", "podiatry", "doctrine", "materiel", "medieval", "maneuver", "economic", "infantry", "security", "vehicles", "contents", "overview", "nomology", "buddhism", "hinduism", "agnostic", "calculus", "cytology", "internet", "academia", "forestry", "zoonoses", "ceramics", "topology", "carthage", "atmology", "indology", "training", "modeling", "controls", "planning", "genetics", "theories", "feminist", "bisexual", "circuits", "cultural", "missions", "benefits", "embedded", "scholars", "exercise", "humanism", "sinology", "genomics", "maternal", "pedagogy", "cellular", "americas", "catholic", "cultures", "military", "physical", "regional", "conflict", "variance", "deviance", "disaster", "emotions", "marriage", "subjects", "literary", "category", "operator", "sampling", "decision", "critical", "automata", "canadian", "european", "hardware", "egyptian", "nigerian", "american", "peruvian", "japanese", "particle", "biblical", "integral", "discrete", "pastoral", "dogmatic", "prospect", "internal", "hospital", "vascular", "forensic", "tropical", "buddhist", "anglican", "outcomes", "consumer", "monetary", "resource", "jealousy", "fracture", "galactic", "infrared", "neutrino", "distance", "feminine", "abnormal", "clinical", "criminal", "positive", "wildlife", "hdraulic", "mechanic", "aviation", "maritime", "software", "reaction", "semiotic", "symbolic", "interior", "studies‎", "beverage", "commerce", "practice", "election", "contract", "property", "politics", "subject‎", "culinary", "transfer", "creative", "delivery", "adhesion", "survival", "acquired", "notation", "movement", "industry", "doxastic", "ministry", "services", "republic", "speaking", "identity", "coaching", "surgical", "domestic", "behavior", "external", "academic", "africana", "hawaiian", "membrane", "standard", "pakistan", "learning", "systemic", "activity", "archival", "shoulder", "sanskrit", "genocide", "material", "personal", "analytic", "oriented", "sumerian", "linnaean", "brownian", "langevin", "graphics", "harmonic", "athletic", "director", "citation", "readers'", "advisory", "campaign", "response", "minority", "orthodox", "heritage", "surfaces", "parallel", "tactical", "wireless", "typology", "slavonic", "southern", "scottish", "diseases", "dramatic", "austrian", "literacy", "historic", "assyrian", "colonial", "interest", "programs", "centered", "ensemble", "tolerant", "asteroid", "equation", "ordinary", "evidence", "taxation", "economics", "sociology", "education", "geography", "astronomy", "mechanics", "chemistry", "sculpture", "genealogy", "philosoph", "tribology", "ethnology", "mythology", "osteology", "taphonomy", "etymology", "philology", "phonetics", "phonology", "semantics", "teleology", "bioethics", "platonism", "chondogyo", "mysticism", "nontheism", "recording", "directing", "animation", "geography", "limnology", "masculism", "phycology", "histology", "pathology", "mammalogy", "catalysts", "petrology", "tectonics", "magnetism", "photonics", "cosmology", "compilers", "catalysis", "surveying", "bushcraft", "woodcraft", "newspaper", "archivist", "museology", "reference", "registrar", "optometry", "neurology", "radiology", "andrology", "artillery", "espionage", "logistics", "engineers", "attrition", "deception", "defensive", "offensive", "mercenary", "seafaring", "liturgics", "semiotics", "anarchism", "hydrology", "acoustics", "nutrition", "dentistry", "midwifery", "marketing", "forensics", "geomatics", "lithology", "audiology", "criticism", "dietetics", "equipment", "literatur", "insurance", "societies", "evolution", "woodwinds", "signaling", "materials", "molecular", "byzantine", "interface", "holocaust", "antitrust", "technical", "portfolio", "ethnicity", "community", "sexology‎", "bootstrap", "strategic", "cognitive", "political", "transport", "childhood", "knowledge", "terrorism", "religions", "recursion", "inventory", "operating", "brazilian", "colombian", "argentine", "mongolian", "norwegian", "icelandic", "classical", "universal", "dynamical", "graphical", "landscape", "practical", "euclidean", "christian", "emergency", "addiction", "religious", "anarchist", "financial", "socialist", "empirical", "inorganic", "medicinal", "synthetic", "celestial", "continuum", "microwave", "secondary", "bilingual", "counselor", "caribbean", "pediatric", "fisheries", "masculine", "petroleum", "household", "aerospace", "paradigms", "modelling", "hydraulic", "corrosion", "nonverbal", "promotion", "corporate", "analytics", "admiralty", "utilities", "artisanal", "formation", "computing", "discovery", "migration", "relations", "englishes", "specialty", "planetary", "resources", "procedure", "sexuality", "intensive", "furniture", "reasoning", "normative", "dysphoria", "movements", "operation", "amusement", "disorders", "husbandry", "scripture", "southeast", "columbian", "actuarial", "ecosystem", "paralegal", "bariatric", "guerrilla", "irregular", "whiteness", "geometric", "condensed", "discourse", "newtonian", "numerical", "exercises", "objective", "assurance", "phenomena", "abrahamic", "automated", "testament", "renewable", "magnetics", "processes", "broadcast", "bulgarian", "keyboards", "retrieval", "academics", "databases", "nonprofit", "taxonomic", "avoidance", "antiquity", "equations", "subfields", "contracts", "amendment", "philosophy", "management", "musicology", "psychology", "management", "nonfiction", "philosophy", "television", "biomedical", "metallurgy", "mechanical", "ergonomics", "missiology", "palynology", "calceology", "glyptology", "egyptology", "lexicology", "morphology", "pragmatics", "gnosticism", "irreligion", "aftertaste", "literature", "conducting", "organology", "dramaturgy", "filmmaking", "navigation", "glaciology", "sindhology", "psephology", "embryology", "teratology", "geobiology", "physiology", "toxicology", "entomology", "malacology", "conchology", "nematology", "edaphology", "mineralogy", "speleology", "cryogenics", "kinematics", "ballistics", "hydraulics", "relativity", "astrometry", "photometry", "algorithms", "arithmetic", "scheduling", "statistics", "demography", "simulation", "accounting", "purchasing", "homiletics", "escapology", "scoutcraft", "propaganda", "bookmobile", "cataloging", "orthoptics", "osteopathy", "cardiology", "hepatology", "geriatrics", "hematology", "nephrology", "pediatrics", "leadership", "industrial", "biological", "electronic", "undercover", "regulation", "curriculum", "praxeology", "humanities", "bibliology", "regression", "immunology", "obstetrics", "psychiatry", "journalism", "scattering", "seismology", "topography", "multimedia", "hypermedia", "networking", "combustion", "innovation", "technology", "percussion", "recreation", "electrical", "portuguese", "children's", "operations", "university", "publishing", "euthenics‎", "aesthetics", "population", "beekeeping", "gynecology", "metabolism", "japanology", "user:pjuan", "principles", "historical", "behavioral", "integrated", "cyberspace", "fatherhood", "government", "motherhood", "punishment", "references", "conspiracy", "diplomatic", "venezuelan", "philippine", "indonesian", "australian", "scientific", "conceptual", "projective", "systematic", "preventive", "veterinary", "protestant", "laboratory", "complexity", "ecological", "managerial", "analytical", "humanistic", "structural", "lagrangian", "elementary", "vocational", "counseling", "indigenous", "collection", "settlement", "imperative", "functional", "concurrent", "earthquake", "acoustical", "automotive", "explosives", "linguistic", "perception", "processing", "enterprise", "techniques", "developent", "bankruptcy", "commercial", "disability", "mercantile", "procedural", "aboriginal", "production", "performing", "structures", "decorative", "preclassic", "telescopes", "scriptural", "phenomenon", "spacecraft", "collateral", "investment", "melanesian", "polynesian", "orchestral", "stochastic", "assignment", "infectious", "orthopedic", "amphibious", "insurgency", "asymmetric", "quaternary", "freshwater", "resolution", "transplant", "collective", "fractional", "relational", "discipline", "anesthesia", "engineerin", "perceptual", "anatomical", "ubiquitous", "organizing", "biomimetic", "geological", "propulsion", "randomized", "bargaining", "rajasthani", "experience", "diagnostic", "diachronic", "synchronic", "protection", "fourteenth", "artificial", "geographic", "traditions", "liberation", "generation", "evaluation", "anglophone", "intermodal", "institutes", "engineering", "archaeology", "programming", "development", "statistical", "printmaking", "composition", "yaesthetics", "photography", "playwriting", "primatology", "ethnobotany", "ethnography", "assyriology", "etruscology", "apologetics", "esotericism", "agnosticism", "scenography", "climatology", "culturology", "genderqueer", "masculinity", "transgender", "victimology", "aerobiology", "cryobiology", "gerontology", "agroecology", "systematics", "xenobiology", "arachnology", "carcinology", "herpetology", "planktology", "volcanology", "geodynamics", "electricity", "spintronics", "aeronautics", "astrobotany", "mathematics", "cybernetics", "agriculture", "aquaculture", "viticulture", "electronics", "microbotics", "narratology", "advertising", "translation", "informatics", "cosmetology", "endodontics", "dermatology", "pulmonology", "gynaecology", "battlespace", "information", "campaigning", "containment", "prehistoric", "disarmament", "corrections", "christology", "soteriology", "eschatology", "calligraphy", "cartography", "meteorology", "ichthyology", "ornithology", "probability", "diabetology", "orthopedics", "biopolymers", "linguistics", "criminology", "nanoscience", "meteoritics", "paleobotany", "professions", "instruction", "mariculture", "reliability", "hospitality", "determinism", "stechnology", "performance", "comparative", "bioresource", "biochemical", "renaissance", "humanities‎", "hydrography", "myrmecology", "environment", "epigenetics", "geopolitics", "integrative", "kinesiology", "computation", "experiments", "behavioural", "mesopotamia", "generations", "immigration", "foundations", "restoration", "concurrency", "accelerator", "atmospheric", "theoretical", "commutative", "multilinear", "homological", "associative", "operational", "sacramental", "alternative", "respiratory", "traditional", "francophone", "hamiltonian", "personality", "foodservice", "battlefield", "sustainable", "nutritional", "biocultural", "theological", "specialties", "competition", "substantive", "enforcement", "interactive", "preparation", "collections", "spaceflight", "exploration", "literatures", "replacement", "radiocarbon", "geometrical", "methodology", "interaction", "vaccination", "distinction", "descriptive", "appalachian", "micronesian", "terminology", "nationalism", "maintenance", "circulation", "scholarship", "terrestrial", "differences", "distributed", "cooperative", "observation", "application", "disciplines", "simulations", "clandestine", "discipline‎", "continental", "geographies", "diagnostics", "coevolution", "engineering", "fabrication", "departments", "arbitration", "anthropology", "biochemistry", "architecture", "illustration", "epistemology", "christianity", "manufacturin'", "ethnobiology", "anthracology", "archaeometry", "confucianism", "spirituality", "palatability", "accompanying", "choreography", "storytelling", "bioeconomics", "econometrics", "biogeography", "oceanography", "gynocentrism", "heterosexism", "postfeminism", "sociobiology", "ethnoecology", "microbiology", "paleobiology", "paleontology", "parasitology", "ethnozoology", "zoosemiotics", "pharmacology", "hydrogeology", "paleoecology", "aerodynamics", "geomagnetism", "biomechanics", "astronautics", "astrobiology", "spectroscopy", "cryptography", "trigonometry", "epidemiology", "horticulture", "purification", "hermeneutics", "ecclesiology", "biocatalysts", "construction", "mechatronics", "biomaterials", "silviculture", "corporations", "preservation", "cytogenetics", "orthodontics", "periodontics", "implantology", "neurosurgery", "rheumatology", "traumatology", "organization", "intelligence", "infiltration", "conventional", "cyberwarfare", "paramilitary", "infographics", "pneumatology", "neuroscience", "bacteriology", "paleozoology", "grammatology", "protistology", "stratigraphy", "volcanology)", "mathematical", "conservation", "evolutionary", "neurobiology", "institutions", "sociological", "intellectual", "scandinavian", "experimental", "differential", "postgraduate", "personalized", "occupational", "agricultural", "reproductive", "figurational", "interpretive", "relativistic", "bioinorganic", "quantitative", "geotechnical", "contemporary", "biomolecular", "presentation", "compressible", "interlibrary", "spectrometry", "colonization", "interstellar", "governmental", "recreational", "professional", "scholarship‎", "civilization", "multivariate", "disciplines‎", "optimization", "psychosocial", "shospitality", "humanitarian", "modification", "compensation", "communication", "screenwriting", "anthrozoology", "functionalism", "processualism", "justification", "scholasticism", "playwrighting", "geomorphology", "androcentrism", "postgenderism", "phenomenology", "psychobiology", "psychometrics", "chronobiology", "endocrinology", "helminthology", "neuroethology", "hydrogenation", "sedimentology", "astrodynamics", "hydrodynamics", "electrostatic", "homeokinetics", "optomechanics", "cryptanalysis", "steganography", "biostatistics", "nanomaterials", "bibliometrics", "dissemination", "physiotherapy", "ophthalmology", "pharmacognosy", "psychosomatic", "psychotherapy", "psychological", "assassination", "jurisprudence", "combinatorics", "agrochemicals", "ventriloquism", "palaeontology", "geostatistics", "environmental", "entertainment", "biotechnology", "international", "semiconductor", "proliferation", "sterilization", "sportscasting", "hepatobiliary", "merchandising", "globalization", "organizations", "computability", "approximation", "technological", "computational", "architectural", "translational", "complementary", "institutional", "participatory", "dramaturgical", "extragalactic", "observational", "submillimetre", "gravitational", "transpersonal", "biomechanical", "protohistoric", "manufacturing", "metallurgical", "intercultural", "supranational", "visualization", "philosophical", "consciousness", "astrophysical", "instructional", "mississippian", "maxillofacial", "bibliographic", "denominations", "civilizations", "methodologies", "interactions‎", "thermodynamics", "ethnomuseology", "paleopathology", "paleoradiology", "zoroastrianism", "macroeconomics", "microeconomics", "neuroeconomics", "socioeconomics", "psychoanalysis", "interactionism", "bioinformatics", "histopathology", "phytopathology", "nanotechnology", "exoplanetology", "magnetospheres", "biocybernetics", "bioengineering", "infrastructure", "semiconductors", "categorization", "classification", "cytohematology", "prosthodontics", "otolaryngology", "unconventional", "transportation", "anesthesiology", "jurisprudence‎", "libertarianism", "phytogeography", "archaeological", "representation", "noncommutative", "cardiovascular", "ecclesiastical", "administration", "pharmaceutical", "rehabilitation", "interpretation", "sinternational", "psychoanalytic", "organometallic", "supramolecular", "organizational", "sociotechnical", "administrative", "constitutional", "intuitionistic", "transformation", "stratification", "responsibility", "chromodynamics", "sustainability", "cardiothoracic", "reconstructive", "human–computer", "discrimination", "archaeogenetics", "manuscriptology", "aristotelianism", "ethnochoreology", "palaeogeography", "psychopathology", "hematopathology", "cheminformatics", "electrokinetics", "helioseismology", "crystallography", "nanoengineering", "haemostasiology", "decontamination", "connoisseurship", "entrepreneurial", "instrumentation", "deacidification", "constructionism", "electrodynamics", "nucleosynthesis", "anthropological", "ethnolinguistics", "sociolinguistics", "archaeoacoustics", "archaeogeography", "dendrochronology", "archaeomythology", "paleoethnobotany", "interlinguistics", "entrepreneurship", "ethnomethodology", "sociocybernetics", "dermatopathology", "electromagnetism", "gastroenterology", "bildwissenschaft", "pharmacodynamics", "pharmacokinetics", "electromagnetics", "paleoclimatology", "phenomenological", "gastrointestinal", "psycholinguistics", "palaeoclimatology", "interdisciplinary", "commercialization", "electrophysiology", "transdisciplinary", "interdisciplinarity", "transdisciplinarity", "otorhinolaryngology", "magnetohydrodynamics"]
 
-        function randomTitle() {
-            return 'a trip to the ' + buildings[Math.floor(Math.random() * buildings.length)]
+        const glue = [" ", " of ", " ", " of the ", " ", ' ', '-']
+
+        function generatePair() {
+            return d[Math.floor(Math.random() * d.length)] + glue[Math.floor(Math.random() * glue.length)] + d[Math.floor(Math.random() * d.length)]
         }
 
         function rollDice(max) {
             return 1 + Math.floor(Math.random() * max)
         }
 
-        function randomDirection() {
-            const roll = rollDice(4)
-            if (roll == 1) return 'face north'
-            if (roll == 2) return 'face east'
-            if (roll == 3) return 'face south'
-            if (roll == 4) return 'face west'
-        }
-
-        function randomWalkItem(length) {
-            if (Math.random() > 0.5) {
-                if (Math.random() > 0.6)
-                    return 'turn right'
-                return 'turn left'
-            }
-            return `walk for ${randomTime(10, 5 * 60)}`
-        }
-
-
-        function randomTime(min, max) {
-            const seconds = Math.floor(Math.random() * (max - min + 1)) + min
-            if (seconds < 60) return `${seconds} seconds`
-            return `${(seconds / 60).toFixed(0)} minutes`
-        }
-
         function randomWalk(length) {
-            const rawSteps = Array.from({ length }).map(randomWalkItem).filter(Boolean)
-            const steps = rawSteps.filter((i, idx) => {
-                if (idx == 0) return true
-                return rawSteps[idx - 1].split(' ')[0] != i.split(' ')[0]
-            })
-
             return [
-                randomTitle(),
-                randomDirection(),
-                ...steps,
-                'finished walking!'
+                generatePair(),
+                generatePair(),
+                generatePair(),
+                generatePair(),
+                generatePair(),
+                generatePair(),
+                generatePair(),
             ].join('\n')
         }
 
-
-        const setQueryStringParameter = (name, value) => {
-            const params = new URLSearchParams(window.location.search)
-            params.set(name, value)
-
-            const url = decodeURIComponent(`${window.location.pathname}?${params}`)
-            window.history.replaceState({}, '', url)
-
-            return url
-        }
-
-        let defaultSettings = {
-            t: `walk to the water fountain
-            face north
-            walk for 10 seconds
-            turn right
-            walk for 50 seconds
-            finished walking!
-            ` }
-
         Spruce.store('settings', {})
 
-
-
-
-
-        // get settings
-        if (typeof gotSettingsFromURL === 'undefined') {
-            window.gotSettingsFromURL = true;
-
-            var urlParams = new URLSearchParams(window.location.search)
-
-            let settingsFromURL = {}
-            Object.keys(defaultSettings).forEach((key, index) => {
-                if (urlParams.has(key)) {
-                    var settingsParam = JSON.parse(urlParams.get(key))
-
-                    if (settingsParam != null) {
-                        Object.assign(settingsFromURL, { [key]: settingsParam })
-                    }
-
-                } else {
-                    Object.assign(settingsFromURL, { [key]: defaultSettings[key] })
-                }
-            })
-            Spruce.reset('settings', settingsFromURL)
-        }
-
-
-
-
-
-        // save settings
-        Object.keys(defaultSettings).forEach((key, index) => {
-            Spruce.watch(`settings.${key}`, (next) => {
-                setQueryStringParameter(key, encodeURIComponent(JSON.stringify(next)))
-            })
-        })
-
-
-
-
-
     </script>
-
-
 
 </body>
 
